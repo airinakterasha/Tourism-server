@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 const app = express()
 const port = process.env.PORT || 5555
@@ -42,6 +42,32 @@ async function run() {
       console.log(user);
       const result = await userCollection.insertOne(user);
       res.send(result);
+    })
+    //get all users
+    app.get('/user', async(req, res) => {
+      const cursor = userCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+    // get single user
+    app.get('/user/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await userCollection.findOne(query);
+      res.send(result)
+    })
+    // patch or update user last logged in
+    app.patch('/user', async(req, res) => {
+      const user = req.body;
+      const filter = {email: user.email};
+      const updateUser = {
+        $set: {
+          lastLoggedAt: user.lastLoggedAt, 
+        }
+
+      }
+      const result = await userCollection.updateOne(filter, updateUser);
+      res.send(result)
     })
 
 

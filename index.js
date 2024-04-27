@@ -12,7 +12,6 @@ app.use(express.json());
 
 
 // mongodb connection
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.y7qgnfe.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 //console.log(uri);
 
@@ -29,6 +28,26 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+
+    //Create database
+    const zoneCollection = client.db('tourismDB').collection('category');
+    const countryCollection = client.db('tourismDB').collection('subCategory');
+    const touristSpotCollection = client.db('tourismDB').collection('touristSpot');
+    const userCollection = client.db('tourismDB').collection('user');
+
+    // API for user
+    //create
+    app.post('/user', async(req, res) => {
+      const user = req.body;
+      console.log(user);
+      const result = await userCollection.insertOne(user);
+      res.send(result);
+    })
+
+
+
+
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");

@@ -32,10 +32,22 @@ async function run() {
     //Create database
     const zoneCollection = client.db('tourismDB').collection('category');
     const countryCollection = client.db('tourismDB').collection('subCategory');
+
+
     const touristSpotCollection = client.db('tourismDB').collection('touristSpot');
     const userCollection = client.db('tourismDB').collection('user');
 
-    // API for user
+
+    // --------------------------------------------- API for touristSpot ------------------------------------------------
+    //create
+    app.post('/tourist-spot', async(req, res) => {
+      const touristSpot = req.body;
+      console.log(touristSpot);
+      const result = await touristSpotCollection.insertOne(touristSpot);
+      res.send(result);
+    })
+
+    // --------------------------------------------- API for user------------------------------------------------
     //create
     app.post('/user', async(req, res) => {
       const user = req.body;

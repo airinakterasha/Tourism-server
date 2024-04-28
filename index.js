@@ -59,9 +59,20 @@ async function run() {
       const result = await touristSpotCollection.findOne(query);
       res.send(result)
     })
-
-
-    
+    // get single user touristSpot
+    app.get('/user/:id/tourist-spot', async(req, res) => {
+      const id = req.params.uid;
+      const query = {id: id};
+      const result = await touristSpotCollection.find(query).toArray();
+      res.send(result)
+    })
+    // delete touristSpot
+    app.delete('/tourist-spot/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await touristSpotCollection.deleteOne(query);
+      res.send(result)
+    })
 
     // --------------------------------------------- API for user------------------------------------------------
     //create

@@ -46,6 +46,14 @@ async function run() {
       const result = await touristSpotCollection.insertOne(touristSpot);
       res.send(result);
     })
+    //get all touristSpot
+    app.get('/tourist-spot', async(req, res) => {
+      const cursor = touristSpotCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+    
+    
 
     // --------------------------------------------- API for user------------------------------------------------
     //create

@@ -82,6 +82,29 @@ async function run() {
       const result = await touristSpotCollection.find(query).toArray();
       res.send(result)
     })
+    //edit or update
+    app.put('/tourist-spot/:id', async(req, res) => {
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)};
+      const options = {upsert: true};
+      const updatedTouristSpot = req.body;
+      const newTouristSpot = {
+        $set: {
+          image: updatedTouristSpot.image,
+          tourists_spot_name: updatedTouristSpot.tourists_spot_name,
+          country_name: updatedTouristSpot.country_name,
+          location: updatedTouristSpot.location,
+          average_cost: updatedTouristSpot.average_cost,
+          short_description: updatedTouristSpot.short_description,
+          seasonality: updatedTouristSpot.seasonality,
+          travel_time: updatedTouristSpot.travel_time,
+          totaVisitorsPerYear: updatedTouristSpot.totaVisitorsPerYear,
+        }
+      }
+      const result = await touristSpotCollection.updateOne(filter, newTouristSpot, options);
+      res.send(result);
+    })
+
     // delete touristSpot
     app.delete('/tourist-spot/:id', async(req, res) => {
       const id = req.params.id;
@@ -96,9 +119,7 @@ async function run() {
       const result = await touristSpotCollection.find(query).toArray();
       res.send(result)
     })
-//tourist-spot/countryname
-//req.params.name
-//await touristSpotCollection.find(query).toArray()
+
     // --------------------------------------------- API for user------------------------------------------------
     //create
     app.post('/user', async(req, res) => {

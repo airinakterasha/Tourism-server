@@ -30,12 +30,28 @@ async function run() {
     await client.connect();
 
     //Create database
-    const zoneCollection = client.db('tourismDB').collection('category');
-    const countryCollection = client.db('tourismDB').collection('subCategory');
+    
+    const countryCollection = client.db('tourismDB').collection('countryName');
 
 
     const touristSpotCollection = client.db('tourismDB').collection('touristSpot');
     const userCollection = client.db('tourismDB').collection('user');
+
+    // --------------------------------------------- API for country ------------------------------------------------
+
+    //create
+    app.post('/countryname', async(req, res) => {
+      const country = req.body;
+      console.log(country);
+      const result = await countryCollection.insertOne(country);
+      res.send(result);
+    })
+    //get all country
+    app.get('/countryname', async(req, res) => {
+      const cursor = countryCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
 
 
     // --------------------------------------------- API for touristSpot ------------------------------------------------
@@ -60,9 +76,9 @@ async function run() {
       res.send(result)
     })
     // get single user touristSpot
-    app.get('/user/:id/tourist-spot', async(req, res) => {
-      const id = req.params.uid;
-      const query = {id: id};
+    app.get('/user/tourist-spots/:email', async(req, res) => {
+      const email = req.params.email;
+      const query = {email: email};
       const result = await touristSpotCollection.find(query).toArray();
       res.send(result)
     })
@@ -73,7 +89,16 @@ async function run() {
       const result = await touristSpotCollection.deleteOne(query);
       res.send(result)
     })
-
+    app.get('/tourist-spot/country/:name', async(req, res) => {
+      const countryName = req.params.name;
+      console.log(countryName)
+      const query = {country_name: countryName};
+      const result = await touristSpotCollection.find(query).toArray();
+      res.send(result)
+    })
+//tourist-spot/countryname
+//req.params.name
+//await touristSpotCollection.find(query).toArray()
     // --------------------------------------------- API for user------------------------------------------------
     //create
     app.post('/user', async(req, res) => {
